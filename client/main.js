@@ -3,8 +3,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-Todos = new Mongo.Collection('todos');
 
+
+// Helpers
 Template.main.helpers({
 	todos: function() {
 		return Todos.find(
@@ -16,15 +17,15 @@ Template.main.helpers({
 	}
 });
 
+
+
+// Events
 Template.main.events({
 	"submit .new-todo": function(event) {
 		var text = event.target.text.value;
 
 		// Insert Text in Mongo
-		Todos.insert({
-			text: text,
-			createdAt: new Date()
-		});
+		Meteor.call("addTodo", text);
 
 		// Clear Form
 		event.target.text.value = "";
@@ -33,11 +34,19 @@ Template.main.events({
 		return false;
 	},
 	"click .toggle-checked": function() {
-		Todos.update(this._id, {$set:{checked: !this.checked}});
+		Meteor.call("setChecked", this._id, !this.checked);
 	},
 	"click .delete-todo": function(){
-		if (confirm("Are you sure?")) {
-			Todos.remove(this._id);
-		}
+		Meteor.call("deleteTodo", this._id);
 	}
 });
+
+
+
+// Accounts
+Accounts.ui.config({
+	passwordSignupFields: "USERNAME_ONLY"
+});
+
+
+

@@ -12,6 +12,7 @@
   <div class="container">
     <div class="header clearfix">
       <h3 class="text-muted">Meteor To-Do App</h3>
+      {{> loginButtons}}
     </div>
 
     <div class="row marketing">
@@ -28,16 +29,20 @@
 </body>
 
 <template name="main">
-  <form class="new-todo">
-    <div class="form-group">
-      <input type="text" name="text" placeholder="Type a Todo..." class="form-control">
-    </div>
-  </form>
+  {{#if currentUser}}
+    <form class="new-todo">
+      <div class="form-group">
+        <input type="text" name="text" placeholder="Type a Todo..." class="form-control">
+      </div>
+    </form>
+  {{/if}}
   <ul>
     {{#each todos}}
       <li class="{{#if checked}}checked{{/if}}">
-        <button class="delete-todo">&times;</button>
-        <input type="checkbox" class="toggle-checked" checked="{{checked}}">
+        {{#if currentUser}}
+          <button class="delete-todo">&times;</button>
+          <input type="checkbox" class="toggle-checked" checked="{{checked}}">
+        {{/if}}
         <span class="text">
           {{text}}
         </span>
