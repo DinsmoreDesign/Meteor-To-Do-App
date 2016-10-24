@@ -28,5 +28,20 @@
 </body>
 
 <template name="main">
-  This is the main template.
+  <form class="new-todo">
+    <div class="form-group">
+      <input type="text" name="text" placeholder="Type a Todo..." class="form-control">
+    </div>
+  </form>
+  <ul>
+    {{#each todos}}
+      <li class="{{#if checked}}checked{{/if}}">
+        <button class="delete-todo">&times;</button>
+        <input type="checkbox" class="toggle-checked" checked="{{checked}}">
+        <span class="text">
+          {{text}}
+        </span>
+      </li>
+    {{/each}}
+  </ul>
 </template>

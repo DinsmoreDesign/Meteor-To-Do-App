@@ -3,20 +3,41 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
+Todos = new Mongo.Collection('todos');
+
+Template.main.helpers({
+	todos: function() {
+		return Todos.find(
+			{},
+			{	// Sort Todos with newest first
+				sort: {createdAt: -1}
+			}
+		);
+	}
 });
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+Template.main.events({
+	"submit .new-todo": function(event) {
+		var text = event.target.text.value;
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+		// Insert Text in Mongo
+		Todos.insert({
+			text: text,
+			createdAt: new Date()
+		});
+
+		// Clear Form
+		event.target.text.value = "";
+
+		// Prevent Submit
+		return false;
+	},
+	"click .toggle-checked": function() {
+		Todos.update(this._id, {$set:{checked: !this.checked}});
+	},
+	"click .delete-todo": function(){
+		if (confirm("Are you sure?")) {
+			Todos.remove(this._id);
+		}
+	}
 });
