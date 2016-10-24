@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 
-Meteor.startup(() => {
-
+Meteor.publish('todos', function(){
+	return Todos.find({
+		userId: this.userId
+	});
 });
 
 // Methods
@@ -18,9 +20,17 @@ Meteor.methods({
 		});
 	},
 	deleteTodo: function(todoId) {
+		var todo = Todos.findOne(todoId);
+		if (todo.userId !== Meteor.userId()){
+			throw new Meteor.Error("not-authorized");
+		};
 		Todos.remove(todoId);
 	},
 	setChecked: function(todoId, setChecked) {
+		var todo = Todos.findOne(todoId);
+		if (todo.userId !== Meteor.userId()){
+			throw new Meteor.Error("not-authorized");
+		};
 		Todos.update(
 			todoId,
 			{
