@@ -22,7 +22,7 @@ Template.main.helpers({
 
 
 // Events
-Template.main.events({
+Template.form.events({
 	"submit .new-todo": function(event) {
 		var text = event.target.text.value;
 
@@ -34,7 +34,9 @@ Template.main.events({
 
 		// Prevent Submit
 		return false;
-	},
+	}
+});
+Template.main.events({
 	"click .toggle-checked": function() {
 		Meteor.call("setChecked", this._id, !this.checked);
 	},

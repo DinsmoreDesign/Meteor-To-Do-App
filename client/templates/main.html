@@ -1,0 +1,18 @@
+<template name="main">
+  <ul class="todo-list">
+    {{#unless currentUser}}
+      <h3 class="thin text-center">Please sign in to access your todos</h3>
+    {{/unless}}
+    {{#each todos}}
+      <li class="{{#if checked}}checked{{/if}}">
+        {{#if currentUser}}
+          <button class="delete-todo">&times;</button>
+          <input type="checkbox" class="toggle-checked" checked="{{checked}}">
+        {{/if}}
+        <span class="text">
+          {{text}}
+        </span>
+      </li>
+    {{/each}}
+  </ul>
+</template>
